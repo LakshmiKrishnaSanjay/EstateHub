@@ -52,6 +52,8 @@ const AddProperty = () => {
       .required("Number of Kitchens is required"),
     parkingSpot: Yup.string().oneOf(["yes", "no"], "Invalid selection").required(),
     landArea: Yup.number().required("Land area is required"),
+    location: Yup.number().required("Location is required"),
+    district: Yup.number().required("District is required"),
     latitude: Yup.number().required("Latitude is required"),
     longitude: Yup.number().required("Longitude is required"),
     
@@ -67,6 +69,8 @@ const AddProperty = () => {
       bathrooms: "",
       kitchens: "",
       parkingSpot: "yes",
+      district:"",
+      location:"",
       landArea: "",
       latitude: "",
       longitude: "",
@@ -192,6 +196,34 @@ const AddProperty = () => {
             />
             {formik.touched.landArea && formik.errors.landArea && (
               <p className="text-red-500">{formik.errors.landArea}</p>
+            )}
+          </div>
+
+          {/* District */}
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">District</label>
+            <input
+              type="text"
+              {...formik.getFieldProps("district")}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Enter district of your property..."
+            />
+            {formik.touched.district && formik.errors.district && (
+              <p className="text-red-500">{formik.errors.district}</p>
+            )}
+          </div>
+
+          {/* Location */}
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Location</label>
+            <input
+              type="text"
+              {...formik.getFieldProps("location")}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Enter location of your property..."
+            />
+            {formik.touched.location && formik.errors.location && (
+              <p className="text-red-500">{formik.errors.location}</p>
             )}
           </div>
 

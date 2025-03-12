@@ -18,7 +18,7 @@ const OwnerHome = () => {
           <p className="text-black max-w-2xl mx-auto mt-4 text-lg">
             Add, edit, and track your property listings efficiently.
           </p>
-          <Link to="/owner/ownerprofile">
+          <Link to="/owner/profile">
             <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 text-lg font-semibold transition">
               Complete Your Profile
             </button>

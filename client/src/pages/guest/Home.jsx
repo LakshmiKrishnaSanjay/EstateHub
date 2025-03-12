@@ -17,7 +17,7 @@ const Home = () => {
     <div>
       {/* Banner Section */}
       <div 
-        className="about-banner bg-cover bg-center bg-no-repeat py-50"
+        className="about-banner bg-cover bg-center bg-no-repeat py-50 mt-2"
         style={{ backgroundImage: "url('/images/banner155.jpg')" }}
       >
         <div className="container mx-auto px-4 text-center">

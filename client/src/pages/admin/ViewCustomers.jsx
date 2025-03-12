@@ -57,7 +57,7 @@ const ViewCustomers = () => {
                                             <td className="py-3 px-6">{customer.name}</td>
                                             <td className="py-3 px-6">{customer.email}</td>
                                             <td className="py-3 px-6">
-                                                <Link to="/user/viewmore">
+                                                <Link to="/admin/viewmore">
                                                     <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                                                         View More
                                                     </button>

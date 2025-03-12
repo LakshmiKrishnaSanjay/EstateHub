@@ -47,8 +47,8 @@ const AdminDashboard = () => {
             </button>
             {chartDropdown && (
               <ul className="pl-6 mt-2 space-y-2">
-                <li><a href="/piechartview" className="block py-2 px-4 hover:bg-gray-600 rounded">Pie Chart</a></li>
-                <li><a href="/datewisereport" className="block py-2 px-4 hover:bg-gray-600 rounded">Date-wise Report</a></li>
+                <li><a href="/admin/piechart" className="block py-2 px-4 hover:bg-gray-600 rounded">Pie Chart</a></li>
+                <li><a href="/admin/datewisereport" className="block py-2 px-4 hover:bg-gray-600 rounded">Date-wise Report</a></li>
               </ul>
             )}
           </li>

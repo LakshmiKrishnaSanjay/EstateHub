@@ -20,7 +20,6 @@ import OwnerHome from "../pages/owner/OwnerHome";
 import OwnerProfile from "../pages/owner/OwnerProfile";
 import AddProperty from "../pages/owner/AddProperty";
 import EditProperty from "../pages/owner/EditProperty";
-import DeleteProperty from "../pages/owner/DeleteProperty";
 import Notifications from "../pages/owner/Notifications";
 import Team from "../pages/guest/Team";
 import Services from "../pages/guest/Services";
@@ -47,6 +46,9 @@ import AgentPayment from "../pages/agent/AgentPayment";
 import ViewCustomers from "../pages/admin/ViewCustomers";
 import PaymentHistory from "../pages/admin/PaymentHistory";
 import ViewComplaints from "../pages/admin/ViewComplaints";
+import ViewMoreProfile from "../pages/admin/ViewMoreProfile";
+import UserPieChart from "../pages/admin/UserPieChart";
+import DateWiseReport from "../pages/admin/DateWiseReport";
 
 
 
@@ -84,6 +86,9 @@ function Layout() {
         <Route path="viewcustomers" element={<ViewCustomers />} />
         <Route path="paymentdetails" element={<PaymentHistory />} />
         <Route path="viewcomplaints" element={<ViewComplaints />} />
+        <Route path="viewmore" element={<ViewMoreProfile />} />
+        <Route path="piechart" element={<UserPieChart />} />
+        <Route path="datewisereport" element={<DateWiseReport />} />
        
         </Route>
 
@@ -102,27 +107,35 @@ function Layout() {
 
         {/* owner */}
         
-        <Route path="/ownerhome" element={<OwnerHome />} />
-        <Route path="/owner/ownerprofile" element={<OwnerProfile />} />
-        <Route path="/owner/addproperty" element={<AddProperty />} />
-        <Route path="/owner/editproperty" element={<EditProperty />} />
-        <Route path="/owner/deleteproperty" element={<DeleteProperty />} />
-        <Route path="/owner/notifications" element={<Notifications />} />
-        <Route path="/owner/viewproperty" element={<ViewProperty />} />
-        <Route path="/owner/viewmoreproperty" element={<ViewMoreProperty />} />
-        <Route path="/owner/ownerpayment" element={<OwnerPayment />} />
+        <Route path="/owner">
+        <Route path="home" element={<OwnerHome />} />
+        <Route path="profile" element={<OwnerProfile />} />
+        <Route path="addproperty" element={<AddProperty />} />
+        <Route path="editproperty" element={<EditProperty />} />
+        
+        <Route path="notifications" element={<Notifications />} />
+        <Route path="viewproperty" element={<ViewProperty />} />
+        <Route path="viewmoreproperty" element={<ViewMoreProperty />} />
+        <Route path="ownerpayment" element={<OwnerPayment />} />
+
+        </Route>
 
         {/* agent */}
 
-        <Route path="/agenthome" element={<AgentHome />} />
+        <Route path="/agent">
+
+        <Route path="home" element={<AgentHome />} />
       
-        <Route path="/agent/addpropertyy" element={<AddProperties />} />
-        <Route path="/agent/viewproperties" element={<ViewProperties />} />
-        <Route path="/agent/viewmoreproperties" element={<ViewMore />} />
-        <Route path="/agent/editproperties" element={<Edit />} />
-        <Route path="/agent/notifications" element={<NotificationAgent />} />
-        <Route path="/agent/agentprofile" element={<AgentProfile />} />
-        <Route path="/agent/agentpayment" element={<AgentPayment />} />
+        <Route path="addpropertyy" element={<AddProperties />} />
+        <Route path="viewproperties" element={<ViewProperties />} />
+        <Route path="viewmoreproperties" element={<ViewMore />} />
+        <Route path="editproperties" element={<Edit />} />
+        <Route path="notifications" element={<NotificationAgent />} />
+        <Route path="agentprofile" element={<AgentProfile />} />
+        <Route path="agentpayment" element={<AgentPayment />} />
+
+        </Route>
+
       </Routes>
       
       {!(isAdminPage || isUserPage || isOwnerPage || isAgentPage) && <Footer />}

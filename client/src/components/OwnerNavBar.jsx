@@ -38,9 +38,7 @@ const OwnerNavBar = () => {
               <Link to="/owner/editproperty" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200">
                 <FaEdit /> Edit Property
               </Link>
-              <Link to="/owner/deleteproperty" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200">
-                <FaTrash /> Delete Property
-              </Link>
+              
             </div>
           )}
         </div>
@@ -58,7 +56,7 @@ const OwnerNavBar = () => {
         </div>
 
         {/* Profile Icon */}
-        <Link to="/owner/ownerprofile" className="hover:text-gray-300">
+        <Link to="/owner/profile" className="hover:text-gray-300">
           <FaUserCircle size={24} />
         </Link>
 

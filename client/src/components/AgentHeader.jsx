@@ -38,9 +38,7 @@ const AgentHeader = () => {
               <Link to="/agent/editproperties" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200">
                 <FaEdit /> Edit Property
               </Link>
-              <Link to="/agent/deleteproperty" className="flex items-center gap-2 px-4 py-2 hover:bg-gray-200">
-                <FaTrash /> Delete Property
-              </Link>
+             
             </div>
           )}
         </div>
