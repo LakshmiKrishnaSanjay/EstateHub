@@ -6,6 +6,7 @@ import OwnerFooter from "../../components/OwnerFooter";
 const AddProperty = () => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
+  const [showExtraFields, setShowExtraFields] = useState(true);
 
   // Handle Image Upload
   const handleImageUpload = (e) => {
@@ -18,6 +19,13 @@ const AddProperty = () => {
     const files = Array.from(e.target.files);
     setVideos(files);
   };
+
+  const handlePropertyTypeChange = (e) => {
+    const selectedType = e.target.value;
+    formik.setFieldValue("propertyType", selectedType);
+    setShowExtraFields(selectedType === "home" || selectedType === "flat"|| selectedType === "both");
+  };
+  
 
   // Validation Schema
   const validationSchema = Yup.object({
@@ -76,23 +84,74 @@ const AddProperty = () => {
         <h2 className="text-3xl font-bold mb-4">Add a New Property</h2>
         <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
 
-          {/* Property Type */}
-          <div className="mb-4">
-            <label className="block text-lg font-semibold mb-2">Property Type</label>
-            <select
-              {...formik.getFieldProps("propertyType")}
-              className="w-full p-3 border border-gray-300 rounded-lg"
-            >
-              <option value="home">Home</option>
-              <option value="land">Land</option>
-              <option value="both">Home & Land</option>
-              <option value="flat">Flat</option>
-              <option value="cp">Commercial Property</option>
-            </select>
-            {formik.touched.propertyType && formik.errors.propertyType && (
-              <p className="text-red-500">{formik.errors.propertyType}</p>
-            )}
-          </div>
+        
+<select
+  value={formik.values.propertyType}
+  onChange={handlePropertyTypeChange}
+  className="w-full p-3 border border-gray-300 rounded-lg"
+>
+  <option value="home">Home</option>
+  <option value="land">Land</option>
+  <option value="both">Home & Land</option>
+  <option value="flat">Flat</option>
+  <option value="cp">Commercial Property</option>
+</select>
+
+
+<div className="mb-4">
+  <label className="block text-lg font-semibold mb-2">Property For</label>
+  <div className="flex gap-4">
+    <label>
+      <input
+        type="radio"
+        name="propertyFor"
+        value="buy"
+        checked={formik.values.propertyFor === "buy"}
+        onChange={formik.handleChange}
+      /> Buy
+    </label>
+    <label>
+      <input
+        type="radio"
+        name="propertyFor"
+        value="rent"
+        checked={formik.values.propertyFor === "rent"}
+        onChange={formik.handleChange}
+      /> Rent
+    </label>
+  </div>
+</div>
+
+{showExtraFields && (
+  <>
+    <div className="mb-4">
+      <label className="block text-lg font-semibold mb-2">Bedrooms</label>
+      <input type="number" {...formik.getFieldProps("bedrooms")} className="w-full p-3 border border-gray-300 rounded-lg" />
+    </div>
+    <div className="mb-4">
+      <label className="block text-lg font-semibold mb-2">Bathrooms</label>
+      <input type="number" {...formik.getFieldProps("bathrooms")} className="w-full p-3 border border-gray-300 rounded-lg" />
+    </div>
+    <div className="mb-4">
+      <label className="block text-lg font-semibold mb-2">Kitchens</label>
+      <input type="number" {...formik.getFieldProps("kitchens")} className="w-full p-3 border border-gray-300 rounded-lg" />
+    </div>
+    <div className="mb-4">
+      <label className="block text-lg font-semibold mb-2">Parking Spot</label>
+      <select {...formik.getFieldProps("parkingSpot")} className="w-full p-3 border border-gray-300 rounded-lg">
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+    </div>
+    <div className="mb-4">
+      <label className="block text-lg font-semibold mb-2">Water Source</label>
+      <select {...formik.getFieldProps("waterSource")} className="w-full p-3 border border-gray-300 rounded-lg">
+        <option value="pipe">Pipe</option>
+        <option value="well">Well</option>
+      </select>
+    </div>
+  </>
+)}
 
           {/* Price */}
           <div className="mb-4">

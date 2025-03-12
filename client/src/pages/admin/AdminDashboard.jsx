@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import { FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaMapMarkerAlt, FaCreditCard, FaChartPie, FaFileAlt } from "react-icons/fa";
+import { FaUserCircle, FaSignOutAlt, FaTachometerAlt, FaMapMarkerAlt,  FaChartPie,  FaUser, FaEnvelopeOpenText,  FaMoneyBill } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
 
 const AdminDashboard = () => {
-  const [viewDropdown, setViewDropdown] = useState(false);
   const [chartDropdown, setChartDropdown] = useState(false);
 
   return (
@@ -13,36 +12,28 @@ const AdminDashboard = () => {
         
         <ul className="space-y-4 flex-1">
           <li>
-            <a href="/dashboard" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+            <a href="/admin/dashboard" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
               <FaTachometerAlt /> Dashboard
             </a>
           </li>
+         
+
           <li>
-            <a href="/location" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
-              <FaMapMarkerAlt /> Add Locations
+            <a href="/admin/viewcustomers" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+              <FaUser /> View User
+            </a>
+          </li>
+
+          <li>
+            <a href="/admin/viewcomplaints" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+              <FaEnvelopeOpenText /> Complaints
             </a>
           </li>
           
+          
           <li>
-            <button onClick={() => setViewDropdown(!viewDropdown)} className="w-full flex items-center justify-between py-2 px-4 hover:bg-gray-700 rounded">
-              <div className="flex items-center gap-3">
-                <FaFileAlt /> Views
-              </div>
-              <IoMdArrowDropdown />
-            </button>
-            {viewDropdown && (
-              <ul className="pl-6 mt-2 space-y-2">
-                <li><a href="/viewlocation" className="block py-2 px-4 hover:bg-gray-600 rounded">View Users</a></li>
-                <li><a href="/viewcategory" className="block py-2 px-4 hover:bg-gray-600 rounded">Categories</a></li>
-                <li><a href="/viewcard" className="block py-2 px-4 hover:bg-gray-600 rounded">Cards</a></li>
-                <li><a href="/viewallcustomer" className="block py-2 px-4 hover:bg-gray-600 rounded">Registered Users</a></li>
-                <li><a href="/viewrequest" className="block py-2 px-4 hover:bg-gray-600 rounded">Requests</a></li>
-              </ul>
-            )}
-          </li>
-          <li>
-            <a href="/location" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
-              <FaMapMarkerAlt /> Payment History
+            <a href="/admin/paymentdetails" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+              <FaMoneyBill /> Payment History
             </a>
           </li>
 

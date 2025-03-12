@@ -8,7 +8,7 @@ import Header from "../components/Header";
 import Footer from "../components/Footer";
 import NotFound from "../pages/NotFound";
 
-import AdminProfile from "../pages/admin/AdminProfile";
+
 import AdminHeader from "../components/AdminHeader";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 
@@ -44,6 +44,11 @@ import AgentProfile from "../pages/agent/AgentProfile";
 import Chat from "../pages/user/chat";
 import OwnerPayment from "../pages/owner/OwnerPayment";
 import AgentPayment from "../pages/agent/AgentPayment";
+import ViewCustomers from "../pages/admin/ViewCustomers";
+import PaymentHistory from "../pages/admin/PaymentHistory";
+import ViewComplaints from "../pages/admin/ViewComplaints";
+
+
 
 
 
@@ -74,18 +79,26 @@ function Layout() {
 
         {/* admin */}
         
-        <Route path="/dashboard" element={<AdminDashboard />} />
-        <Route path="/admin/profile" element={<AdminProfile />} />
+        <Route path="/admin">
+        <Route path="dashboard" element={<AdminDashboard />} />
+        <Route path="viewcustomers" element={<ViewCustomers />} />
+        <Route path="paymentdetails" element={<PaymentHistory />} />
+        <Route path="viewcomplaints" element={<ViewComplaints />} />
+       
+        </Route>
 
+        
         {/* user */}
 
-        <Route path="/userhome" element={<UserHome />} />
-        <Route path="/user/userprofile" element={<UserProfile />} />
-        <Route path="/user/buyaproperty" element={<BuyAProperty />} />
-        <Route path="/user/rentaproperty" element={<RentAProperty />} />
-        <Route path="/user/buypropertydetails" element={<PropertyDetails />} />
-        <Route path="/user/rentpropertydetails" element={<RentPropertyDetails />} />
-        <Route path="/user/chat" element={<Chat />} />
+        <Route path="/user">
+        <Route path="home" element={<UserHome />} />
+        <Route path="profile" element={<UserProfile />} />
+        <Route path="buyaproperty" element={<BuyAProperty />} />
+        <Route path="rentaproperty" element={<RentAProperty />} />
+        <Route path="buypropertydetails" element={<PropertyDetails />} />
+        <Route path="rentpropertydetails" element={<RentPropertyDetails />} />
+        <Route path="chat" element={<Chat />} />
+        </Route>
 
         {/* owner */}
         

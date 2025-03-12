@@ -9,18 +9,18 @@ const OwnerHome = () => {
       {/* Hero Section */}
       <div 
         className="about-banner bg-cover bg-center bg-no-repeat py-40 flex flex-col justify-center items-center text-center"
-        style={{ backgroundImage: "url('/images/banner19.jpg')" }} // Update banner image if needed
+        style={{ backgroundImage: "url('/images/banner14.jpg')" }} // Update banner image if needed
       >
         <div className="container mx-auto px-4">
-          <h3 className="text-4xl font-bold text-white drop-shadow-md">
+          <h3 className="text-4xl font-bold text-black drop-shadow-md">
             Manage Your Properties with Ease!
           </h3>
-          <p className="text-white max-w-2xl mx-auto mt-4 text-lg">
+          <p className="text-black max-w-2xl mx-auto mt-4 text-lg">
             Add, edit, and track your property listings efficiently.
           </p>
-          <Link to="/">
+          <Link to="/owner/ownerprofile">
             <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 text-lg font-semibold transition">
-              Get Started
+              Complete Your Profile
             </button>
           </Link>
         </div>

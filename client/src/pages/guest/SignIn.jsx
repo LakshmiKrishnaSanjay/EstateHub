@@ -7,7 +7,7 @@ import {useDispatch  } from "react-redux";
 import { useNavigate } from "react-router-dom"
 
 export default function SignIn() {
-  const { mutateAsync } = useMutation({
+  const { mutateAsync , error, isError } = useMutation({
     mutationFn: loginAPI, 
     mutationKey: ["userLogin"]
   });   //mutateAssync is used to call assync fn and mutate is used for synchronous fn
@@ -36,6 +36,8 @@ export default function SignIn() {
     },
   });
 
+  console.log(error);
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800">
@@ -79,6 +81,9 @@ export default function SignIn() {
           >
             Log In
           </button>
+
+          {isError && <div>[error.respond.data.message]</div>}
+          
         </form>
       </div>
     </div>

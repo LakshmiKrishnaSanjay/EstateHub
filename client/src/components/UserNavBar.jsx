@@ -28,10 +28,10 @@ function UserNavBar() {
       {/* Right section for navigation links */}
       <div className='flex items-center gap-4'>
         <ul className='flex gap-4'>
-          <Link to='/userhome'>
+          <Link to='/user/home'>
             <li className='text-green-700 hover:underline'>Home</li>
           </Link>
-          <Link to='/user/userprofile'>
+          <Link to='/user/profile'>
             <li className='text-green-700 hover:underline flex items-center gap-2'><FaUserCircle className="text-2xl" />Profile</li>
             
           </Link>
