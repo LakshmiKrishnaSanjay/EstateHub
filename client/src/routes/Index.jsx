@@ -116,7 +116,7 @@ function Layout() {
         <Route path="notifications" element={<Notifications />} />
         <Route path="viewproperty" element={<ViewProperty />} />
         <Route path="viewmoreproperty" element={<ViewMoreProperty />} />
-        <Route path="ownerpayment" element={<OwnerPayment />} />
+        <Route path="payment" element={<OwnerPayment />} />
 
         </Route>
 
@@ -132,7 +132,7 @@ function Layout() {
         <Route path="editproperties" element={<Edit />} />
         <Route path="notifications" element={<NotificationAgent />} />
         <Route path="agentprofile" element={<AgentProfile />} />
-        <Route path="agentpayment" element={<AgentPayment />} />
+        <Route path="payment" element={<AgentPayment />} />
 
         </Route>
 

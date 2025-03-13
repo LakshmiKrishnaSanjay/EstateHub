@@ -29,8 +29,8 @@ export default function SignIn() {
       mutateAsync(values).then((data)=>{
         console.log(data);
         dispatch(login(data))
-        localStorage.setItem(`userData`,data)
-        navigate('/userhome')
+        localStorage.setItem(`userData`,data.token)
+        navigate('/user/home')
         
       })
     },

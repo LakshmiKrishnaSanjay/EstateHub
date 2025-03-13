@@ -24,8 +24,10 @@ const userSlice = createSlice({
 
         login:((state,action)=>{
             console.log(action.payload);
-            state.token= action.payload
-            const decoded = jwtDecode(action.payload)
+            state.token= action.payload.token
+            console.log(action.payload);
+            
+            const decoded = jwtDecode(action.payload.token)
             console.log(decoded);
             
             state.isLogin=true

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function Footer() {
   return (
     <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12">
-      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-10">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
         
         {/* About Section */}
         <div>
@@ -16,22 +16,28 @@ function Footer() {
           </p>
         </div>
 
-        {/* Quick Links */}
+        {/* Quick Search */}
         <div className="flex justify-center">
-          <ul className="space-y-3 text-center md:text-left">
-            <li>
-              <Link to="/" className="text-gray-400 hover:text-blue-400 transition">Home</Link>
-            </li>
-            <li>
-              <Link to="/about" className="text-gray-400 hover:text-blue-400 transition">About</Link>
-            </li>
-            <li>
-              <Link to="/services" className="text-gray-400 hover:text-blue-400 transition">Services</Link>
-            </li>
-            <li>
-              <Link to="/contact" className="text-gray-400 hover:text-blue-400 transition">Contact</Link>
-            </li>
-          </ul>
+          <div>
+            <h2 className="text-lg font-bold text-blue-400 mb-3">Quick Search</h2>
+            <ul className="space-y-2 text-center md:text-left">
+              <li><Link to="/" className="text-gray-400 hover:text-blue-400 transition">Home</Link></li>
+              <li><Link to="/about" className="text-gray-400 hover:text-blue-400 transition">About</Link></li>
+              <li><Link to="/services" className="text-gray-400 hover:text-blue-400 transition">Services</Link></li>
+              <li><Link to="/properties" className="text-gray-400 hover:text-blue-400 transition">Properties</Link></li>
+              <li><Link to="/contact" className="text-gray-400 hover:text-blue-400 transition">Contact</Link></li>
+            </ul>
+          </div>
+        </div>
+
+        {/* Contact Info */}
+        <div className="flex justify-center">
+          <div>
+            <h2 className="text-lg font-bold text-blue-400 mb-3">Contact Info</h2>
+            <p className="text-gray-400 text-sm">📍 123 EstateHub Street, City, Country</p>
+            <p className="text-gray-400 text-sm mt-2">📞 +123 456 7890</p>
+            <p className="text-gray-400 text-sm mt-2">✉️ info@estatehub.com</p>
+          </div>
         </div>
 
         {/* Social Media Icons */}

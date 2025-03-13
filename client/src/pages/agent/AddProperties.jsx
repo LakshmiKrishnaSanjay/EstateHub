@@ -1,12 +1,16 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import OwnerFooter from "../../components/OwnerFooter";
+import axios from "axios";
 
 const AddProperties = () => {
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [showExtraFields, setShowExtraFields] = useState(true);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
+  const [location, setLocation] = useState("");
 
   // Handle Image Upload
   const handleImageUpload = (e) => {
@@ -25,6 +29,7 @@ const AddProperties = () => {
     formik.setFieldValue("propertyType", selectedType);
     setShowExtraFields(selectedType === "home" || selectedType === "flat"|| selectedType === "both");
   };
+  
   
 
   // Validation Schema
@@ -52,8 +57,8 @@ const AddProperties = () => {
       .required("Number of Kitchens is required"),
     parkingSpot: Yup.string().oneOf(["yes", "no"], "Invalid selection").required(),
     landArea: Yup.number().required("Land area is required"),
-    location: Yup.number().required("Location is required"),
-    district: Yup.number().required("District is required"),
+    location: Yup.string().required("Location is required"),
+    district: Yup.string().required("District is required"),
     latitude: Yup.number().required("Latitude is required"),
     longitude: Yup.number().required("Longitude is required"),
     
@@ -81,6 +86,27 @@ const AddProperties = () => {
       console.log("Form Submitted:", values);
     },
   });
+
+  useEffect(() => {
+    if (formik.values.location.length > 2) {
+      const fetchCoordinates = async () => {
+        try {
+          const response = await axios.get(
+            `https://nominatim.openstreetmap.org/search?format=json&q=${formik.values.location}`
+          );
+          if (response.data.length > 0) {
+            formik.setFieldValue("latitude", response.data[0].lat);
+            formik.setFieldValue("longitude", response.data[0].lon);
+          }
+        } catch (error) {
+          console.error("Error fetching location data:", error);
+        }
+      };
+      const delayDebounce = setTimeout(fetchCoordinates, 500);
+      return () => clearTimeout(delayDebounce);
+    }
+  }, [formik.values.location]);
+
 
   return (
     <>
@@ -227,44 +253,32 @@ const AddProperties = () => {
             )}
           </div>
 
-          {/* Latitude & Longitude */}
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            <div>
-              <label className="block text-lg font-semibold mb-2">Latitude</label>
-              <input
-                type="number"
-                {...formik.getFieldProps("latitude")}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-                placeholder="Enter latitude"
-              />
-              {formik.touched.latitude && formik.errors.latitude && (
-                <p className="text-red-500">{formik.errors.latitude}</p>
-              )}
-            </div>
-            <div>
-              <label className="block text-lg font-semibold mb-2">Longitude</label>
-              <input
-                type="number"
-                {...formik.getFieldProps("longitude")}
-                className="w-full p-3 border border-gray-300 rounded-lg"
-                placeholder="Enter longitude"
-              />
-              {formik.touched.longitude && formik.errors.longitude && (
-                <p className="text-red-500">{formik.errors.longitude}</p>
-              )}
-            </div>
-          </div>
-
-          {/* Features */}
-          <div className="mb-4">
-  <label className="block text-lg font-semibold mb-2">Features</label>
-  <textarea
-    {...formik.getFieldProps("features")}
-    className="w-full p-3 border border-gray-300 rounded-lg"
-    placeholder="Enter property features (comma-separated)"
-    rows="3"
+         
+         
+ {/* Latitude */}
+<div className="mb-4">
+  <label className="block text-lg font-semibold mb-2">Latitude</label>
+  <input
+    type="text"
+    value={formik.values.latitude}
+    readOnly
+    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
   />
 </div>
+
+{/* Longitude */}
+<div className="mb-4">
+  <label className="block text-lg font-semibold mb-2">Longitude</label>
+  <input
+    type="text"
+    value={formik.values.longitude}
+    readOnly
+    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+  />
+</div>
+
+    
+
 
 
         {/* Media Upload (Images & Videos) */}

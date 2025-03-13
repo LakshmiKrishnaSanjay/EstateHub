@@ -2,12 +2,49 @@ import React, { useState } from "react";
 
 const OwnerPayment = () => {
   const [paymentMethod, setPaymentMethod] = useState("card");
+  const [numListings, setNumListings] = useState(5); // Default 5 listings
+  const pricePerListing = 100; // Set price per listing
+  const totalAmount = (numListings / 5) * pricePerListing; // Calculate total
+
+  const handleListingsChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    if (value >= 5 && value <= 50 && value % 5 === 0) {
+      setNumListings(value);
+    }
+  };
 
   return (
     <div className="container mx-auto p-6">
       <h2 className="text-3xl font-bold mb-4">Payment</h2>
       <div className="bg-white p-6 rounded-lg shadow-md max-w-lg mx-auto">
         
+        {/* Number of Listings */}
+        <div className="mb-4">
+          <label className="block text-lg font-semibold mb-2">Number of Listings</label>
+          <select
+            value={numListings}
+            onChange={handleListingsChange}
+            className="w-full p-3 border border-gray-300 rounded-lg"
+          >
+            {Array.from({ length: 10 }, (_, i) => (i + 1) * 5).map((num) => (
+              <option key={num} value={num}>
+                {num} Listings
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Total Amount */}
+        <div className="mb-4">
+          <label className="block text-lg font-semibold mb-2">Total Amount</label>
+          <input
+            type="text"
+            value={`$${totalAmount}`}
+            readOnly
+            className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
+          />
+        </div>
+
         {/* Payment Method Selection */}
         <div className="mb-4">
           <label className="block text-lg font-semibold mb-2">Select Payment Method</label>
@@ -20,13 +57,6 @@ const OwnerPayment = () => {
             <option value="upi">UPI</option>
             <option value="paypal">PayPal</option>
           </select>
-        </div>
-
-
-        {/* Payment Method Selection */}
-        <div className="mb-4">
-          <label className="block text-lg font-semibold mb-2">Amount</label>
-          <input type="text" placeholder="Amount" className="w-full p-3 border border-gray-300 rounded-lg mb-2" />
         </div>
 
         {/* Payment Details */}
