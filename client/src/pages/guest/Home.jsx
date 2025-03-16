@@ -5,12 +5,12 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
   const properties = [
-    { id: 1, image: "/images/property1.jpg", name: "Luxury Villa" },
-    { id: 2, image: "/images/property2.jpg", name: "Modern Apartment" },
-    { id: 3, image: "/images/property3.jpg", name: "Beach House" },
-    { id: 4, image: "/images/property4.jpg", name: "Mountain Cabin" },
-    { id: 5, image: "/images/property5.jpg", name: "Urban Condo" },
-    { id: 6, image: "/images/property6.jpg", name: "Suburban Home" },
+    { id: 1, image: "/images/l1.jpg", name: "Luxury Villa" },
+    { id: 2, image: "/images/m2.jpeg", name: "Modern Apartment" },
+    { id: 3, image: "/images/property6.jpg", name: "Beach House" },
+    { id: 4, image: "/images/m4.jpg", name: "Mountain Cabin" },
+    { id: 5, image: "/images/m3.jpg", name: "Urban Condo" },
+    { id: 6, image: "/images/m5.jpg", name: "Suburban Home" },
   ];
 
   return (
@@ -18,7 +18,7 @@ const Home = () => {
       {/* Banner Section */}
       <div 
         className="about-banner bg-cover bg-center bg-no-repeat py-50 mt-2"
-        style={{ backgroundImage: "url('/images/banner155.jpg')" }}
+        style={{ backgroundImage: "url('/images/banner15.jpg')" }}
       >
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-3xl font-bold text-white">Experience Excellence in Real Estate</h3>

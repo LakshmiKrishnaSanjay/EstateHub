@@ -49,6 +49,9 @@ import ViewComplaints from "../pages/admin/ViewComplaints";
 import ViewMoreProfile from "../pages/admin/ViewMoreProfile";
 import UserPieChart from "../pages/admin/UserPieChart";
 import DateWiseReport from "../pages/admin/DateWiseReport";
+import FAQ from "../pages/guest/FAQ";
+import FAQs from "../pages/user/FAQs";
+import Contact from "../pages/user/Contact";
 
 
 
@@ -64,7 +67,7 @@ function Layout() {
 
   return (
     <>
-      {isAdminPage ? <AdminHeader /> : isUserPage ? <UserNavBar /> : isOwnerPage ? <OwnerNavBar /> : isAgentPage ? <AgentHeader /> : <Header />}
+      {isAdminPage ? <AdminHeader /> : isUserPage ? <UserNavBar />  : isOwnerPage ? <OwnerNavBar /> : isAgentPage ? <AgentHeader /> : <Header />}
       
       <Routes>
         <Route path="/" element={<Home />} />
@@ -76,6 +79,7 @@ function Layout() {
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/signupagent" element={<SignUpAgent />} />
         <Route path="/signupowner" element={<SignUpOwner />} />
+        <Route path="/FAQ" element={<FAQ />} />
         
         <Route path="/*" element={<NotFound />} />
 
@@ -103,6 +107,8 @@ function Layout() {
         <Route path="buypropertydetails" element={<PropertyDetails />} />
         <Route path="rentpropertydetails" element={<RentPropertyDetails />} />
         <Route path="chat" element={<Chat />} />
+        <Route path="FAQ" element={<FAQs />} />
+        <Route path="contact" element={<Contact />} />
         </Route>
 
         {/* owner */}

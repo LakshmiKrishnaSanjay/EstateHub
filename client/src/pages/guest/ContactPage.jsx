@@ -35,7 +35,7 @@ const ContactPage = () => {
           <p className="text-gray-600 mb-4">You can reach us through the following methods:</p>
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Email:</h3>
-            <p className="text-gray-600">contact@realestate.com</p>
+            <p className="text-gray-600">estatehub@realestate.com</p>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Phone:</h3>

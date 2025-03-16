@@ -1,45 +1,68 @@
 import React from 'react';
-import { FaFacebook, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { FaFacebook, FaGithub, FaInstagram, FaTwitter } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
 
 function AgentFooter() {
   return (
-    <footer className="bg-gray-800 text-white p-6 mt-6">
-      <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center">
-        {/* Logo Section */}
-        <div className="flex items-center gap-2 mb-4 sm:mb-0">
-          <h1 className="font-bold text-lg">
-            <span className="text-gray-100">Estate</span>
-            <span className="text-gray-400">Hub</span>
-          </h1>
+    <footer className="bg-gradient-to-r from-gray-900 to-gray-800 text-white py-12">
+      <div className="max-w-6xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-10">
+        
+        {/* About Section */}
+        <div>
+          <h2 className="text-xl font-bold text-blue-400">EstateHub Agents</h2>
+          <p className="text-gray-400 mt-3 text-sm leading-relaxed">
+            Manage and list your properties seamlessly. EstateHub provides the best platform 
+            for property agents to reach potential buyers and tenants.
+          </p>
         </div>
 
         {/* Quick Links */}
-        <div className="flex flex-wrap gap-6 mb-4 sm:mb-0">
-          <ul>
-            <li><a href="/agent-dashboard" className="hover:text-gray-300">Dashboard</a></li>
-            <li><a href="/agent-listings" className="hover:text-gray-300">My Listings</a></li>
-            <li><a href="/agent-profile" className="hover:text-gray-300">Profile</a></li>
-            <li><a href="/support" className="hover:text-gray-300">Support</a></li>
-          </ul>
+        <div className="flex justify-center">
+          <div>
+            <h2 className="text-lg font-bold text-blue-400 mb-3">Quick Links</h2>
+            <ul className="space-y-2 text-center md:text-left">
+              <li><Link to="/agent/home" className="text-gray-400 hover:text-blue-400 transition">Home</Link></li>
+              <li><Link to="/agent/viewproperty" className="text-gray-400 hover:text-blue-400 transition">My Properties</Link></li>
+              <li><Link to="/agent/notifications" className="text-gray-400 hover:text-blue-400 transition">Messages</Link></li>
+              <li><Link to="/team" className="text-gray-400 hover:text-blue-400 transition">Support</Link></li>
+            </ul>
+          </div>
         </div>
 
-        {/* Social Media */}
-        <div className="flex gap-4">
-          <a href="https://facebook.com" className="hover:text-gray-300 text-xl">
-            <FaFacebook />
+        {/* Contact Info */}
+        <div className="flex justify-center">
+          <div>
+            <h2 className="text-lg font-bold text-blue-400 mb-3">Contact Support</h2>
+            <p className="text-gray-400 text-sm">📍 EstateHub, City, Country</p>
+            <p className="text-gray-400 text-sm mt-2">📞 +123 456 7890</p>
+            <p className="text-gray-400 text-sm mt-2">✉️ agentsupport@estatehub.com</p>
+          </div>
+        </div>
+
+        {/* Social Media Icons */}
+        <div className="flex justify-center md:justify-end space-x-4">
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition transform hover:scale-110">
+            <FaFacebook size={28} />
           </a>
-          <a href="https://twitter.com" className="hover:text-gray-300 text-xl">
-            <FaTwitter />
+          <a href="#" className="text-gray-400 hover:text-pink-500 transition transform hover:scale-110">
+            <FaInstagram size={28} />
           </a>
-          <a href="https://linkedin.com" className="hover:text-gray-300 text-xl">
-            <FaLinkedin />
+          <a href="#" className="text-gray-400 hover:text-blue-400 transition transform hover:scale-110">
+            <FaTwitter size={28} />
+          </a>
+          <a href="#" className="text-gray-400 hover:text-gray-500 transition transform hover:scale-110">
+            <FaGithub size={28} />
           </a>
         </div>
+
       </div>
 
-      {/* Footer Bottom */}
-      <div className="text-center text-sm mt-4">
-        <p>&copy; 2025 EstateHub. All rights reserved.</p>
+      {/* Divider */}
+      <div className="border-t border-gray-700 mt-8 pt-6 text-center">
+        <p className="text-sm text-gray-400">
+          © 2025 EstateHub agents. All Rights Reserved | Managed by 
+          <a href="#" className="text-blue-400 hover:underline ml-1">EstateHub</a>
+        </p>
       </div>
     </footer>
   );

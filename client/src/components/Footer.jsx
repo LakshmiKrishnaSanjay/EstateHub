@@ -24,8 +24,9 @@ function Footer() {
               <li><Link to="/" className="text-gray-400 hover:text-blue-400 transition">Home</Link></li>
               <li><Link to="/about" className="text-gray-400 hover:text-blue-400 transition">About</Link></li>
               <li><Link to="/services" className="text-gray-400 hover:text-blue-400 transition">Services</Link></li>
-              <li><Link to="/properties" className="text-gray-400 hover:text-blue-400 transition">Properties</Link></li>
+              <li><Link to="/team" className="text-gray-400 hover:text-blue-400 transition">Team</Link></li>
               <li><Link to="/contact" className="text-gray-400 hover:text-blue-400 transition">Contact</Link></li>
+              <li><Link to="/FAQ" className="text-gray-400 hover:text-blue-400 transition">FAQ</Link></li>
             </ul>
           </div>
         </div>
@@ -36,7 +37,7 @@ function Footer() {
             <h2 className="text-lg font-bold text-blue-400 mb-3">Contact Info</h2>
             <p className="text-gray-400 text-sm">📍 123 EstateHub Street, City, Country</p>
             <p className="text-gray-400 text-sm mt-2">📞 +123 456 7890</p>
-            <p className="text-gray-400 text-sm mt-2">✉️ info@estatehub.com</p>
+            <p className="text-gray-400 text-sm mt-2">✉️ estatehub@realestate.com</p>
           </div>
         </div>
 
@@ -62,7 +63,7 @@ function Footer() {
       <div className="border-t border-gray-700 mt-8 pt-6 text-center">
         <p className="text-sm text-gray-400">
           © 2025 EstateHub. All Rights Reserved | Designed by 
-          <a href="#" className="text-blue-400 hover:underline ml-1">Lakshmi</a>
+          <a href="#" className="text-blue-400 hover:underline ml-1">EstateHub</a>
         </p>
       </div>
     </footer>

@@ -36,7 +36,7 @@ function About() {
       {/* Banner Section */}
       <div 
   className="about-banner bg-cover bg-center bg-no-repeat py-50 mt-10"
-  style={{ backgroundImage: "url('/images/banner155.jpg')" }}
+  style={{ backgroundImage: "url('/images/building12.jpg')" }}
 >
         <div className="container mx-auto px-4 text-center">
           <h3 className="text-2xl font-bold text-white">Experience Excellence in Real Estate</h3>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { FaSearch, FaHome, FaBuilding, FaDollarSign, FaUsers } from "react-icons/fa";
 import { Link } from 'react-router-dom';
+import UserFooter from '../../components/UserFooter';
 
 function UserHome() {
   return (
@@ -20,9 +21,9 @@ function UserHome() {
 
         
           {/* CTA Button */}
-          <Link to=''>
+          <Link to='/user/profile'>
             <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 text-lg font-semibold transition">
-              Get Started
+             Complete Your Profile
             </button>
           </Link>
         </div>
@@ -110,7 +111,7 @@ function UserHome() {
         </Link>
       </div>
 
-      
+       <UserFooter />
     </div>
   );
 }
