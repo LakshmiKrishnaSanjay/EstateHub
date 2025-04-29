@@ -1,47 +1,115 @@
 import React from 'react';
-import { FaSearch , FaUserCircle} from 'react-icons/fa';
-import { Link } from 'react-router-dom';
+import { FaBell, FaEnvelope, FaHeart } from 'react-icons/fa';
+import { Link, useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { logout } from '../redux/userSlice';
+import { getProfileAPI } from '../services/userService';
+import { getNotificationsAPI } from '../services/notificationServices';
 
 function UserNavBar() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
+
+  const { data } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfileAPI,
+  });
+
+    const { data: notifications = [] } = useQuery({
+      queryKey: ["notifications"],
+      queryFn: getNotificationsAPI,
+    });
+
+  const profilePic = data?.user?.profilePic || 'https://via.placeholder.com/40';
+  const unreadCount = notifications.filter(n => !n.read).length;
+
+
+  const handleLogout = () => {
+    const confirmLogout = window.confirm('Are you sure you want to log out?');
+    if (confirmLogout) {
+      sessionStorage.clear();
+      dispatch(logout());
+      queryClient.invalidateQueries();
+      navigate('/');
+    }
+  };
+
   return (
-    <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
-      {/* Left section for the logo */}
-      <Link to='/userhome'>
-        <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
-          <span className='text-green-500'>Estate</span>
-          <span className='text-green-700'>Hub</span>
-        </h1>
-      </Link>
+    <div className='bg-teal-900 text-white'>
+      <div className='flex justify-between items-center max-w-6xl mx-auto p-3'>
+        {/* Left section for the logo */}
+        <Link to='/user/home'>
+          <h1 className='font-bold text-sm sm:text-xl flex flex-wrap'>
+            <span className='text-white'>Estate</span>
+            <span className='text-teal-100'>Hub</span>
+          </h1>
+        </Link>
+  
+        {/* Right section for navigation links */}
+        <div className='flex items-center gap-4'>
+          <ul className='flex gap-4 items-center'>
+  
+            {/* Profile link */}
+            <Link to='/user/profile'>
+              <li className='hover:underline flex items-center gap-2'>
+                <img
+                  src={profilePic}
+                  alt="User Profile"
+                  className="w-10 h-10 rounded-full object-cover border border-white"
+                />
+                Profile
+              </li>
+            </Link>
 
-      {/* Center section for the small search bar */}
-      <div className='flex-grow flex justify-center'>
-        <form className='bg-slate-100 p-2 rounded-lg flex items-center w-full max-w-xs'>
-          <input
-            type='text'
-            placeholder='Search....'
-            className='bg-transparent focus:outline-none w-full'
-          />
-          <FaSearch className='text-slate-600' />
-        </form>
-      </div>
-
-      {/* Right section for navigation links */}
-      <div className='flex items-center gap-4'>
-        <ul className='flex gap-4'>
-          <Link to='/user/home'>
-            <li className='text-green-700 hover:underline'>Home</li>
-          </Link>
-          <Link to='/user/profile'>
-            <li className='text-green-700 hover:underline flex items-center gap-2'><FaUserCircle className="text-2xl" />Profile</li>
             
-          </Link>
-          <Link to='/sign-out'>
-            <li className='text-green-700 hover:underline'>Sign Out</li>
-          </Link>
-        </ul>
+                        {/* Notification Bell */}
+                        <div className="relative">
+                          <Link
+                            to="/user/notifications"
+                            className="relative hover:text-gray-300"
+                          >
+                            <FaBell />
+                            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                {unreadCount}
+              </span>
+            )}
+            
+            
+                          </Link>
+                        </div>
+  
+            {/* Wishlist link */}
+            <Link to='/user/wishlist'>
+              <li className='hover:underline flex items-center gap-2'>
+                <FaHeart className="text-red-400" />
+                Wishlist
+              </li>
+            </Link>
+
+            {/* Messages Icon */}
+            <Link to='/user/messages'>
+              <li className='hover:underline flex items-center gap-2'>
+                <FaEnvelope className="text-white" />
+                Messages
+              </li>
+            </Link>
+  
+            {/* Logout */}
+            <li
+              className='hover:underline cursor-pointer'
+              onClick={handleLogout}
+            >
+              Sign Out
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   );
+  
 }
 
 export default UserNavBar;

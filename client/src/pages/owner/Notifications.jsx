@@ -1,79 +1,132 @@
 import React from "react";
 import OwnerFooter from "../../components/OwnerFooter";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import {
+  deleteAllNotificationsAPI,
+  deleteNotificationAPI,
+  getNotificationsAPI,
+  markNotificationAsReadAPI,
+} from "../../services/notificationServices";
 
 const Notifications = () => {
+  const queryClient = useQueryClient();
+
+  const {
+    data: notifications,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: getNotificationsAPI,
+  });
+
+  const markAsReadMutation = useMutation({
+    mutationFn: markNotificationAsReadAPI,
+    onSuccess: () => queryClient.invalidateQueries(["notifications"]),
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteNotificationAPI,
+    onSuccess: () => queryClient.invalidateQueries(["notifications"]),
+  });
+
+
+  const deleteAllMutation = useMutation({
+    mutationFn: deleteAllNotificationsAPI,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["notifications"]);
+      alert("All notifications deleted successfully.");
+    },
+    onError: () => {
+      alert("Failed to delete notifications.");
+    },
+  });
+  
+  const handleDeleteAll = () => {
+    if (window.confirm("Are you sure you want to delete all notifications?")) {
+      deleteAllMutation.mutate();
+    }
+  };
+  
+
+  if (isLoading)
+    return <div className="min-h-screen flex items-center justify-center">Loading notifications...</div>;
+  if (isError)
+    return <div className="min-h-screen flex items-center justify-center">Failed to load notifications.</div>;
+
   return (
-    <div>
-      {/* Navbar */}
+    <div className="flex flex-col min-h-screen bg-gray-50">
+      <main className="flex-grow container mx-auto p-6">
+        <h2 className="text-3xl font-bold mb-6 text-center">🔔 Notifications</h2>
+        <div className="space-y-6">
+          {notifications.length === 0 ? (
+            <p className="text-gray-600 text-center mt-10">No notifications found.</p>
+          ) : (
+            notifications.map((notification) => (
+              <div
+                key={notification._id}
+                className={`p-6 rounded-lg shadow-md border ${
+                  notification.read ? "bg-white" : "bg-yellow-50 border-yellow-300"
+                }`}
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p
+                      className="text-base text-gray-800"
+                      dangerouslySetInnerHTML={{ __html: notification.message }}
+                    ></p>
+                  </div>
+                  <span className="text-sm text-gray-500 whitespace-nowrap">
+                    {new Date(notification.date).toLocaleString()}
+                  </span>
+                </div>
 
-      {/* Main Content */}
-      <div className="container mx-auto p-6">
-        <h2 className="text-3xl font-bold mb-4">Customer Notifications</h2>
-        <p className="text-lg text-gray-700 mb-8">
-          View and manage requests made by customers.
-        </p>
+                <div className="flex flex-wrap gap-3 mt-2">
+                  {notification.complaintId && (
+                    <a
+                      href={`/complaints/${notification.complaintId}`}
+                      className="bg-teal-600 text-white px-4 py-2 rounded hover:bg-teal-700"
+                    >
+                      View Complaint
+                    </a>
+                  )}
 
-        {/* Notifications List */}
-        <div className="space-y-4">
-          {/* Notification Item */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-lg font-semibold">Request for more details on Property #1023</p>
-              <span className="text-sm text-gray-500">Feb 17, 2025</span>
-            </div>
-            <p className="text-gray-700 mb-4">
-              A customer has requested more details regarding Property #1023. They would like to know more about the amenities and the available parking spots.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-teal-600 text-white p-4 rounded-lg hover:bg-teal-700 transition">
-                View Request
-              </button>
-              <button className="bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600 transition">
-                Mark as Read
-              </button>
-            </div>
-          </div>
+                  {!notification.read && (
+                    <button
+                      onClick={() => markAsReadMutation.mutate(notification._id)}
+                      className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700"
+                    >
+                      Mark as Read
+                    </button>
+                  )}
 
-          {/* Notification Item */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-lg font-semibold">Inquiry about Property #1050</p>
-              <span className="text-sm text-gray-500">Feb 16, 2025</span>
-            </div>
-            <p className="text-gray-700 mb-4">
-              A customer has inquired about the price and the payment plans for Property #1050. They are interested in scheduling a viewing soon.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-teal-600 text-white p-4 rounded-lg hover:bg-teal-700 transition">
-                View Request
-              </button>
-              <button className="bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600 transition">
-                Mark as Read
-              </button>
-            </div>
-          </div>
+                  <button
+                    onClick={() => deleteMutation.mutate(notification._id)}
+                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                  >
+                    Delete
+                  </button>
+                </div>
+                
+              </div>
+            ))
+          )}
 
-          {/* Notification Item */}
-          <div className="bg-white p-6 rounded-lg shadow-md">
-            <div className="flex justify-between items-center mb-4">
-              <p className="text-lg font-semibold">Customer Interest in Property #1087</p>
-              <span className="text-sm text-gray-500">Feb 14, 2025</span>
-            </div>
-            <p className="text-gray-700 mb-4">
-              A customer is interested in Property #1087. They would like to arrange a meeting with you to discuss further details.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-teal-600 text-white p-4 rounded-lg hover:bg-teal-700 transition">
-                View Request
-              </button>
-              <button className="bg-gray-500 text-white p-4 rounded-lg hover:bg-gray-600 transition">
-                Mark as Read
-              </button>
-            </div>
-          </div>
+{notifications.length > 0 && (
+  <div className="flex justify-end mb-4">
+    <button
+      onClick={handleDeleteAll}
+      className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+    >
+      Delete All
+    </button>
+  </div>
+)}
+
         </div>
-      </div>
 
+        
+      </main>
       <OwnerFooter />
     </div>
   );

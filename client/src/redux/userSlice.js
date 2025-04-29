@@ -8,40 +8,53 @@ const userSlice = createSlice({
         name:getDecodedData()?.name || null,
         email:getDecodedData()?.email || null,
         token:getUserData() || null,
+        id:getDecodedData()?.id || null,
+        verified:getDecodedData()?.verified || false,
         isLogin:getUserData() ? true : false,
         role:getDecodedData()?.role || null,
     },
 
     reducers:{
 
-        signup(state){ //action specifies the action performed here
-            state.isLogin=true
-            state.name=name
-            state.email=email
-            state.token=token
-
+        login: (state, action) => {
+            const token = action.payload.token;
+            const decoded = jwtDecode(token);
+        
+            state.token = token;
+            state.email = decoded.email;
+            state.name = decoded.name; // optional
+            state.role = decoded.role; // optional
+            state.isLogin = true;
+            state.id = decoded.id; // optional    
+            state.verified =decoded.verified    
+            sessionStorage.setItem("userData", token); // ✅ this is crucial
         },
-
-        login:((state,action)=>{
-            console.log(action.payload);
-            state.token= action.payload.token
-            console.log(action.payload);
-            
-            const decoded = jwtDecode(action.payload.token)
-            console.log(decoded);
-            
-            state.isLogin=true
-            state.name=decoded.name
-            state.email=decoded.email
-            
-        }),
-
-        logout(state){ // action is need only when we need to fetch data
-            state.isLogout=false
-            state.name = null
-            state.email = null
-            state.token= null
+        
+        signup: (state, action) => {
+            const token = action.payload.token;
+            const decoded = jwtDecode(token);
+        
+            state.token = token;
+            state.email = decoded.email;
+            state.name = decoded.name;
+            state.role = decoded.role;
+            state.isLogin = true;
+            state.id = decoded.id; // optional
+        
+            sessionStorage.setItem("userData", token); // ✅ same here
         },
+        
+
+        logout: (state) => {
+            state.name = null;
+            state.email = null;
+            state.token = null;
+            state.isLogin = false;
+            state.id = null;
+        
+            sessionStorage.removeItem("userData"); // ✅ clear token on logout
+        },
+        
         
     }
 })

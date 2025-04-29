@@ -34,8 +34,8 @@ function OwnerFooter() {
           <div>
             <h2 className="text-lg font-bold text-blue-400 mb-3">Contact Support</h2>
             <p className="text-gray-400 text-sm">📍 EstateHub Owner Services, City, Country</p>
-            <p className="text-gray-400 text-sm mt-2">📞 +123 456 7890</p>
-            <p className="text-gray-400 text-sm mt-2">✉️ ownersupport@estatehub.com</p>
+            <p className="text-gray-400 text-sm mt-2">📞 +91 9874561230 </p>
+            <p className="text-gray-400 text-sm mt-2">✉️ estatehub2k25@gmail.com</p>
           </div>
         </div>
 

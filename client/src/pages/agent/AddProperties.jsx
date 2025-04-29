@@ -1,24 +1,23 @@
-import React, { useState , useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import OwnerFooter from "../../components/OwnerFooter";
+import { useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import AgentFooter from "../../components/AgentFooter";
+import { createPropertyAPI } from "../../services/propertyService";
 import axios from "axios";
 
 const AddProperties = () => {
+  const navigate = useNavigate();
   const [images, setImages] = useState([]);
   const [videos, setVideos] = useState([]);
   const [showExtraFields, setShowExtraFields] = useState(true);
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
-  const [location, setLocation] = useState("");
 
-  // Handle Image Upload
   const handleImageUpload = (e) => {
     const files = Array.from(e.target.files);
     setImages(files);
   };
 
-  // Handle Video Upload
   const handleVideoUpload = (e) => {
     const files = Array.from(e.target.files);
     setVideos(files);
@@ -27,13 +26,11 @@ const AddProperties = () => {
   const handlePropertyTypeChange = (e) => {
     const selectedType = e.target.value;
     formik.setFieldValue("propertyType", selectedType);
-    setShowExtraFields(selectedType === "home" || selectedType === "flat"|| selectedType === "both");
+    setShowExtraFields(selectedType === "home" || selectedType === "flat" || selectedType === "both");
   };
-  
-  
 
-  // Validation Schema
   const validationSchema = Yup.object({
+    title: Yup.string().required("Title is required"),
     propertyType: Yup.string().required("Property Type is required"),
     price: Yup.number()
       .typeError("Price must be a number")
@@ -43,29 +40,41 @@ const AddProperties = () => {
       .min(10, "Description must be at least 10 characters")
       .required("Description is required"),
     propertyFor: Yup.string().oneOf(["buy", "rent"], "Invalid option").required(),
-    bedrooms: Yup.number()
-      .min(0, "Minimum 0")
-      .max(20, "Maximum 20")
-      .required("Number of Bedrooms is required"),
-    bathrooms: Yup.number()
-      .min(0, "Minimum 0")
-      .max(20, "Maximum 20")
-      .required("Number of Bathrooms is required"),
-    kitchens: Yup.number()
-      .min(0, "Minimum 0")
-      .max(10, "Maximum 10")
-      .required("Number of Kitchens is required"),
-    parkingSpot: Yup.string().oneOf(["yes", "no"], "Invalid selection").required(),
-    landArea: Yup.number().required("Land area is required"),
+    bedrooms: showExtraFields
+      ? Yup.number()
+          .min(0, "Minimum 0")
+          .max(20, "Maximum 20")
+          .required("Number of Bedrooms is required")
+      : Yup.number().notRequired(),
+    bathrooms: showExtraFields
+      ? Yup.number()
+          .min(0, "Minimum 0")
+          .max(20, "Maximum 20")
+          .required("Number of Bathrooms is required")
+      : Yup.number().notRequired(),
+    kitchens: showExtraFields
+      ? Yup.number()
+          .min(0, "Minimum 0")
+          .max(10, "Maximum 10")
+          .required("Number of Kitchens is required")
+      : Yup.number().notRequired(),
+    parkingSpot: Yup.boolean().required("Parking spot selection is required"),
+    area: Yup.number().required("Land area is required"),
     location: Yup.string().required("Location is required"),
     district: Yup.string().required("District is required"),
     latitude: Yup.number().required("Latitude is required"),
     longitude: Yup.number().required("Longitude is required"),
-    
   });
+
+  const { mutateAsync } = useMutation({
+    mutationFn: createPropertyAPI,
+    mutationKey: ["add-property"],
+  });
+  
 
   const formik = useFormik({
     initialValues: {
+      title: "",
       propertyType: "home",
       price: "",
       description: "",
@@ -73,121 +82,180 @@ const AddProperties = () => {
       bedrooms: "",
       bathrooms: "",
       kitchens: "",
-      parkingSpot: "yes",
-      district:"",
-      location:"",
-      landArea: "",
+      parkingSpot: true,
+      district: "",
+      location: "",
+      area: "",
       latitude: "",
       longitude: "",
       features: "",
     },
     validationSchema,
-    onSubmit: (values) => {
-      console.log("Form Submitted:", values);
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const formData = new FormData();
+        Object.entries(values).forEach(([key, value]) => {
+          formData.append(key, value);
+        });
+
+        images.forEach((img) => formData.append("photos", img));
+        videos.forEach((vid) => formData.append("videos", vid));
+
+        await mutateAsync(formData);
+        resetForm();
+        navigate("/agent/viewproperties");
+      } catch (error) {
+        console.error("Submission error:", error.response?.data || error.message);
+      
+        const errorMessage = error.response?.data?.message || error.message;
+      
+        if (errorMessage && errorMessage.includes("property limit")) {
+          alert(errorMessage); // show the exact backend message
+        } else {
+          alert("Something went wrong while adding the property. Please try again.");
+        }
+      }
+      
     },
   });
 
-  useEffect(() => {
-    if (formik.values.location.length > 2) {
-      const fetchCoordinates = async () => {
-        try {
-          const response = await axios.get(
-            `https://nominatim.openstreetmap.org/search?format=json&q=${formik.values.location}`
-          );
-          if (response.data.length > 0) {
-            formik.setFieldValue("latitude", response.data[0].lat);
-            formik.setFieldValue("longitude", response.data[0].lon);
+   useEffect(() => {
+      if (formik.values.location.length > 2) {
+        const fetchCoordinates = async () => {
+          try {
+            const response = await axios.get(
+              `https://nominatim.openstreetmap.org/search?format=json&q=${formik.values.location}`
+            );
+            if (response.data.length > 0) {
+              formik.setFieldValue("latitude", response.data[0].lat);
+              formik.setFieldValue("longitude", response.data[0].lon);
+            }
+          } catch (error) {
+            console.error("Error fetching location data:", error);
           }
-        } catch (error) {
-          console.error("Error fetching location data:", error);
-        }
-      };
-      const delayDebounce = setTimeout(fetchCoordinates, 500);
-      return () => clearTimeout(delayDebounce);
-    }
-  }, [formik.values.location]);
-
+        };
+        const delayDebounce = setTimeout(fetchCoordinates, 500);
+        return () => clearTimeout(delayDebounce);
+      }
+    }, [formik.values.location]);
+  
+  
 
   return (
     <>
       <div className="container mx-auto p-6">
         <h2 className="text-3xl font-bold mb-4">Add a New Property</h2>
         <form onSubmit={formik.handleSubmit} className="bg-white p-6 rounded-lg shadow-md">
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Title</label>
+            <input
+              type="text"
+              {...formik.getFieldProps("title")}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Enter property title"
+            />
+            {formik.touched.title && formik.errors.title && (
+              <p className="text-red-500">{formik.errors.title}</p>
+            )}
+          </div>
 
-        
-<select
-  value={formik.values.propertyType}
-  onChange={handlePropertyTypeChange}
-  className="w-full p-3 border border-gray-300 rounded-lg"
->
-  <option value="home">Home</option>
-  <option value="land">Land</option>
-  <option value="both">Home & Land</option>
-  <option value="flat">Flat</option>
-  <option value="cp">Commercial Property</option>
-</select>
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Property Type</label>
+            <select
+              name="propertyType"
+              value={formik.values.propertyType}
+              onChange={handlePropertyTypeChange}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+            >
+              <option value="home">Home</option>
+              <option value="land">Land</option>
+              <option value="both">Home & Land</option>
+              <option value="flat">Flat</option>
+              <option value="commercial">Commercial Property</option>
+            </select>
+            {formik.touched.propertyType && formik.errors.propertyType && (
+              <p className="text-red-500">{formik.errors.propertyType}</p>
+            )}
+          </div>
 
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Property For</label>
+            <div className="flex gap-4">
+              <label>
+                <input
+                  type="radio"
+                  name="propertyFor"
+                  value="buy"
+                  checked={formik.values.propertyFor === "buy"}
+                  onChange={formik.handleChange}
+                />{" "}
+                Sale
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  name="propertyFor"
+                  value="rent"
+                  checked={formik.values.propertyFor === "rent"}
+                  onChange={formik.handleChange}
+                />{" "}
+                Rent
+              </label>
+            </div>
+          </div>
 
-<div className="mb-4">
-  <label className="block text-lg font-semibold mb-2">Property For</label>
-  <div className="flex gap-4">
-    <label>
-      <input
-        type="radio"
-        name="propertyFor"
-        value="buy"
-        checked={formik.values.propertyFor === "buy"}
-        onChange={formik.handleChange}
-      /> Buy
-    </label>
-    <label>
-      <input
-        type="radio"
-        name="propertyFor"
-        value="rent"
-        checked={formik.values.propertyFor === "rent"}
-        onChange={formik.handleChange}
-      /> Rent
-    </label>
-  </div>
-</div>
+          {showExtraFields && (
+            <>
+              <div className="mb-4">
+                <label className="block text-lg font-semibold mb-2">Bedrooms</label>
+                <input
+                  type="number"
+                  {...formik.getFieldProps("bedrooms")}
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.bedrooms && formik.errors.bedrooms && (
+                  <p className="text-red-500">{formik.errors.bedrooms}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-semibold mb-2">Bathrooms</label>
+                <input
+                  type="number"
+                  {...formik.getFieldProps("bathrooms")}
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.bathrooms && formik.errors.bathrooms && (
+                  <p className="text-red-500">{formik.errors.bathrooms}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-semibold mb-2">Kitchens</label>
+                <input
+                  type="number"
+                  {...formik.getFieldProps("kitchens")}
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                />
+                {formik.touched.kitchens && formik.errors.kitchens && (
+                  <p className="text-red-500">{formik.errors.kitchens}</p>
+                )}
+              </div>
+              <div className="mb-4">
+                <label className="block text-lg font-semibold mb-2">Parking Spot</label>
+                <select
+                  {...formik.getFieldProps("parkingSpot")}
+                  className="w-full p-3 border border-gray-300 rounded-lg"
+                >
+                  <option value="true">Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+            </>
+          )}
 
-{showExtraFields && (
-  <>
-    <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Bedrooms</label>
-      <input type="number" {...formik.getFieldProps("bedrooms")} className="w-full p-3 border border-gray-300 rounded-lg" />
-    </div>
-    <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Bathrooms</label>
-      <input type="number" {...formik.getFieldProps("bathrooms")} className="w-full p-3 border border-gray-300 rounded-lg" />
-    </div>
-    <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Kitchens</label>
-      <input type="number" {...formik.getFieldProps("kitchens")} className="w-full p-3 border border-gray-300 rounded-lg" />
-    </div>
-    <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Parking Spot</label>
-      <select {...formik.getFieldProps("parkingSpot")} className="w-full p-3 border border-gray-300 rounded-lg">
-        <option value="yes">Yes</option>
-        <option value="no">No</option>
-      </select>
-    </div>
-    <div className="mb-4">
-      <label className="block text-lg font-semibold mb-2">Water Source</label>
-      <select {...formik.getFieldProps("waterSource")} className="w-full p-3 border border-gray-300 rounded-lg">
-        <option value="pipe">Pipe</option>
-        <option value="well">Well</option>
-      </select>
-    </div>
-  </>
-)}
-
-          {/* Price */}
           <div className="mb-4">
             <label className="block text-lg font-semibold mb-2">Price</label>
             <input
-              type="text"
+              type="number"
               {...formik.getFieldProps("price")}
               className="w-full p-3 border border-gray-300 rounded-lg"
               placeholder="Enter price"
@@ -197,7 +265,6 @@ const AddProperties = () => {
             )}
           </div>
 
-          {/* Description */}
           <div className="mb-4">
             <label className="block text-lg font-semibold mb-2">Description</label>
             <textarea
@@ -211,21 +278,19 @@ const AddProperties = () => {
             )}
           </div>
 
-          {/* Land Area */}
           <div className="mb-4">
             <label className="block text-lg font-semibold mb-2">Land Area (sqft)</label>
             <input
               type="number"
-              {...formik.getFieldProps("landArea")}
+              {...formik.getFieldProps("area")}
               className="w-full p-3 border border-gray-300 rounded-lg"
               placeholder="Enter land area in square feet"
             />
-            {formik.touched.landArea && formik.errors.landArea && (
-              <p className="text-red-500">{formik.errors.landArea}</p>
+            {formik.touched.area && formik.errors.area && (
+              <p className="text-red-500">{formik.errors.area}</p>
             )}
           </div>
 
-          {/* District */}
           <div className="mb-4">
             <label className="block text-lg font-semibold mb-2">District</label>
             <input
@@ -239,7 +304,6 @@ const AddProperties = () => {
             )}
           </div>
 
-          {/* Location */}
           <div className="mb-4">
             <label className="block text-lg font-semibold mb-2">Location</label>
             <input
@@ -253,90 +317,101 @@ const AddProperties = () => {
             )}
           </div>
 
-         
-         
- {/* Latitude */}
-<div className="mb-4">
-  <label className="block text-lg font-semibold mb-2">Latitude</label>
-  <input
-    type="text"
-    value={formik.values.latitude}
-    readOnly
-    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
-  />
-</div>
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div>
+              <label className="block text-lg font-semibold mb-2">Latitude</label>
+              <input
+                type="number"
+                readOnly
+                {...formik.getFieldProps("latitude")}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+                placeholder="Enter latitude"
+              />
+              {formik.touched.latitude && formik.errors.latitude && (
+                <p className="text-red-500">{formik.errors.latitude}</p>
+              )}
+            </div>
+            <div>
+              <label className="block text-lg font-semibold mb-2">Longitude</label>
+              <input
+                type="number"
+                readOnly
+                {...formik.getFieldProps("longitude")}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+                placeholder="Enter longitude"
+              />
+              {formik.touched.longitude && formik.errors.longitude && (
+                <p className="text-red-500">{formik.errors.longitude}</p>
+              )}
+              
+            </div>
+          </div>
 
-{/* Longitude */}
-<div className="mb-4">
-  <label className="block text-lg font-semibold mb-2">Longitude</label>
-  <input
-    type="text"
-    value={formik.values.longitude}
-    readOnly
-    className="w-full p-3 border border-gray-300 rounded-lg bg-gray-100"
-  />
-</div>
+
+
 
     
 
-
-
-        {/* Media Upload (Images & Videos) */}
-<div className="mb-4 flex flex-col gap-4">
-  {/* Image Upload */}
-  <div>
-    <label className="block text-lg font-semibold mb-2">Upload Property Images</label>
-    <input 
-      type="file" 
-      accept="image/*" 
-      multiple 
-      onChange={handleImageUpload} 
-      className="w-full p-3 border border-gray-300 rounded-lg"
-    />
-    {images.length > 0 && (
-      <div className="mt-4 grid grid-cols-3 gap-4">
-        {images.map((image, index) => (
-          <div key={index}>
-            <img 
-              src={URL.createObjectURL(image)} 
-              alt={`Property Image ${index + 1}`} 
-              className="w-full h-32 object-cover rounded-md" 
+          <div className="mb-4">
+            <label className="block text-lg font-semibold mb-2">Features</label>
+            <textarea
+              {...formik.getFieldProps("features")}
+              className="w-full p-3 border border-gray-300 rounded-lg"
+              placeholder="Enter property features (comma-separated)"
+              rows="3"
             />
           </div>
-        ))}
-      </div>
-    )}
-  </div>
 
-  {/* Video Upload */}
-  <div>
-    <label className="block text-lg font-semibold mb-2">Upload Property Videos</label>
-    <input 
-      type="file" 
-      accept="video/*" 
-      multiple 
-      onChange={handleVideoUpload} 
-      className="w-full p-3 border border-gray-300 rounded-lg"
-    />
-    {videos.length > 0 && (
-      <div className="mt-4 grid grid-cols-2 gap-4">
-        {videos.map((video, index) => (
-          <div key={index}>
-            <video 
-              src={URL.createObjectURL(video)} 
-              controls 
-              className="w-full h-40 object-cover rounded-md"
-            />
+          <div className="mb-4 flex flex-col gap-4">
+            <div>
+              <label className="block text-lg font-semibold mb-2">Upload Property Photos</label>
+              <input
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleImageUpload}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
+              {images.length > 0 && (
+                <div className="mt-4 grid grid-cols-3 gap-4">
+                  {images.map((image, index) => (
+                    <div key={index}>
+                      <img
+                        src={URL.createObjectURL(image)}
+                        alt={`Property Image ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-md"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div>
+              <label className="block text-lg font-semibold mb-2">Upload Property Videos</label>
+              <input
+                type="file"
+                accept="video/*"
+                multiple
+                onChange={handleVideoUpload}
+                className="w-full p-3 border border-gray-300 rounded-lg"
+              />
+              {videos.length > 0 && (
+                <div className="mt-4 grid grid-cols-2 gap-4">
+                  {videos.map((video, index) => (
+                    <div key={index}>
+                      <video
+                        src={URL.createObjectURL(video)}
+                        controls
+                        className="w-full h-40 object-cover rounded-md"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        ))}
-      </div>
-    )}
-  </div>
-</div>
 
-
-
-          {/* Submit Button */}
           <button
             type="submit"
             className="bg-green-600 text-white p-4 rounded-lg w-45 hover:bg-teal-700"
@@ -345,7 +420,7 @@ const AddProperties = () => {
           </button>
         </form>
       </div>
-      <OwnerFooter />
+      <AgentFooter />
     </>
   );
 };

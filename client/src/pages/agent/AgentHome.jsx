@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaPlusCircle, FaList } from "react-icons/fa";
 import AgentFooter from "../../components/AgentFooter";
+import { useSelector } from "react-redux";
 
 const AgentHome = () => {
+    const { verified } = useSelector((state) => state.user);
+  
+    useEffect(() => {
+      console.log(verified);
+    }, [verified]);
+  
   return (
     <div className="bg-gray-100 pt-2">
       {/* Hero Section */}
@@ -18,10 +25,20 @@ const AgentHome = () => {
           <p className="text-white max-w-2xl mx-auto mt-4 text-lg">
             Add new properties and track customer interactions with ease.
           </p>
-          <Link to="/">
-            <button className="mt-6 bg-green-600 text-white py-3 px-6 rounded-md hover:bg-green-700 text-lg font-semibold transition">
-              Get Started
-            </button>
+          <Link to="/agent/agentprofile">
+          {!verified && (
+          <button
+  className="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+  disabled={verified}
+>
+  Complete Your Profile
+</button>)}
+{!verified && (
+  <p className="mt-2 text-lg text-white">
+    
+    Kindly please wait... Your profile is under review.  Once verified, you'll be able to add, view, and delete properties. For verification , please complete your profile.
+  </p>
+)}
           </Link>
         </div>
       </div>
@@ -35,7 +52,10 @@ const AgentHome = () => {
             <h4 className="text-xl font-semibold">Add a Property</h4>
             <p className="text-gray-600 mt-2">List new properties quickly.</p>
             <Link to="/agent/addpropertyy">
-              <button className="mt-4 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">
+            <button
+  className="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+  disabled={!verified}
+>
                 Add Property
               </button>
             </Link>
@@ -45,13 +65,17 @@ const AgentHome = () => {
             <h4 className="text-xl font-semibold">View Listings</h4>
             <p className="text-gray-600 mt-2">Check and manage your properties.</p>
             <Link to="/agent/viewproperties">
-              <button className="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">
-                View Listings
+            <button
+  className="mt-4 bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed"
+  disabled={!verified}
+>  View Listings
               </button>
             </Link>
           </div>
         </div>
       </div>
+
+      <div className="mt-10"></div>
 
       <AgentFooter />
     </div>

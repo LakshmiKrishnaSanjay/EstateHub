@@ -22,7 +22,7 @@ function AgentFooter() {
             <h2 className="text-lg font-bold text-blue-400 mb-3">Quick Links</h2>
             <ul className="space-y-2 text-center md:text-left">
               <li><Link to="/agent/home" className="text-gray-400 hover:text-blue-400 transition">Home</Link></li>
-              <li><Link to="/agent/viewproperty" className="text-gray-400 hover:text-blue-400 transition">My Properties</Link></li>
+              <li><Link to="/agent/viewproperties" className="text-gray-400 hover:text-blue-400 transition">My Properties</Link></li>
               <li><Link to="/agent/notifications" className="text-gray-400 hover:text-blue-400 transition">Messages</Link></li>
               <li><Link to="/team" className="text-gray-400 hover:text-blue-400 transition">Support</Link></li>
             </ul>
@@ -34,8 +34,8 @@ function AgentFooter() {
           <div>
             <h2 className="text-lg font-bold text-blue-400 mb-3">Contact Support</h2>
             <p className="text-gray-400 text-sm">📍 EstateHub, City, Country</p>
-            <p className="text-gray-400 text-sm mt-2">📞 +123 456 7890</p>
-            <p className="text-gray-400 text-sm mt-2">✉️ agentsupport@estatehub.com</p>
+            <p className="text-gray-400 text-sm mt-2">📞 +91 9874561230 </p>
+            <p className="text-gray-400 text-sm mt-2">✉️ estatehub2k25@gmail.com</p>
           </div>
         </div>
 

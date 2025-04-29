@@ -35,11 +35,11 @@ const ContactPage = () => {
           <p className="text-gray-600 mb-4">You can reach us through the following methods:</p>
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Email:</h3>
-            <p className="text-gray-600">estatehub@realestate.com</p>
+            <p className="text-gray-600">estatehub2k25@gmail.com</p>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Phone:</h3>
-            <p className="text-gray-600">+123-456-7890</p>
+            <p className="text-gray-600">+91 9874561230 </p>
           </div>
           <div className="mb-4">
             <h3 className="text-lg font-semibold">Office Address:</h3>

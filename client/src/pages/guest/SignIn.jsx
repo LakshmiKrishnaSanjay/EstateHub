@@ -4,10 +4,10 @@ import * as Yup from "yup"; // Import Yup for validation
 import { loginAPI } from "../../services/userService";
 import { login } from "../../redux/userSlice";
 import {useDispatch  } from "react-redux";
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function SignIn() {
-  const { mutateAsync , error, isError } = useMutation({
+  const { mutateAsync } = useMutation({
     mutationFn: loginAPI, 
     mutationKey: ["userLogin"]
   });   //mutateAssync is used to call assync fn and mutate is used for synchronous fn
@@ -26,18 +26,29 @@ export default function SignIn() {
     }),
 
     onSubmit: (values) => {
-      mutateAsync(values).then((data)=>{
-        console.log(data);
-        dispatch(login(data))
-        localStorage.setItem(`userData`,data.token)
-        navigate('/user/home')
-        
-      })
-    },
+      mutateAsync(values)
+        .then((data) => {
+          dispatch(login(data));
+          sessionStorage.setItem(`userData`, data.token);
+          if (data.role === "customer") {
+            navigate("/user/home");
+          } else if (data.role === "agent") {
+            navigate("/agent/home");
+          } else if (data.role === "owner") {
+            navigate("/owner/home");
+          } else {
+            navigate("/admin/dashboard");
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          // Set form error manually
+          formik.setFieldError("password", "Invalid email or password");
+        });
+    }
+    ,
   });
 
-  console.log(error);
-  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-800">
@@ -46,13 +57,13 @@ export default function SignIn() {
 
         <form onSubmit={formik.handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-white mb-3">Username</label>
+            <label className="block text-sm font-medium text-white mb-3">Email ID</label>
             <input
               type="email"
               name="email"
              {...formik.getFieldProps("email")}
               className="w-full px-4 py-2 bg-white/20 text-white border border-white/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-300 placeholder-gray-200"
-              placeholder="Username..."
+              placeholder="Email.."
               required
             />
             {formik.touched.email && formik.errors.email ? (
@@ -75,15 +86,16 @@ export default function SignIn() {
             ) : null}
           </div>
 
-          <button onClick={()=>{dispatch((login))}}
+          <Link to="/forgotpassword" className="text-sm text-gray-400 hover:text-gray-200 mb-5 block text-center">
+            Forgot Password?
+          </Link>
+
+          <button
             type="submit"
             className="w-32 mx-auto block bg-gray-900 text-white py-1.5 rounded-md hover:bg-gray-600 transition font-semibold text-sm"
           >
             Log In
           </button>
-
-          {isError && <div>[error.respond.data.message]</div>}
-          
         </form>
       </div>
     </div>

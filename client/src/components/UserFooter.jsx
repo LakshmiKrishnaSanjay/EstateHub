@@ -32,8 +32,8 @@ function UserFooter() {
           <div>
             <h2 className="text-lg font-bold text-teal-300 mb-3">Contact Info</h2>
             <p className="text-teal-100 text-sm">📍 456 EstateHub Lane, City, Country</p>
-            <p className="text-teal-100 text-sm mt-2">📞 +123 987 6543</p>
-            <p className="text-teal-100 text-sm mt-2">✉️ support@estatehub.com</p>
+            <p className="text-teal-100 text-sm mt-2">📞 +91 9874561230 </p>
+            <p className="text-teal-100 text-sm mt-2">✉️ estatehub2k25@gmail.com</p>
           </div>
         </div>
 

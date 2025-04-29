@@ -7,7 +7,7 @@ const AdminSideBar = () => {
   const [chartDropdown, setChartDropdown] = useState(false);
 
   return (
-    <aside className="w-72 bg-gray-900 text-white p-6 flex flex-col">
+    <aside className="w-60 bg-gray-800 text-white p-6 flex flex-col">
      <ul className="space-y-4 flex-1">
                <li>
                  <a href="/admin/dashboard" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
@@ -34,22 +34,20 @@ const AdminSideBar = () => {
                    <FaMoneyBill /> Payment History
                  </a>
                </li>
+               
      
      
-               <li>
-                 <button onClick={() => setChartDropdown(!chartDropdown)} className="w-full flex items-center justify-between py-2 px-4 hover:bg-gray-700 rounded">
-                   <div className="flex items-center gap-3">
-                     <FaChartPie /> Charts
-                   </div>
-                   <IoMdArrowDropdown />
-                 </button>
-                 {chartDropdown && (
-                   <ul className="pl-6 mt-2 space-y-2">
-                     <li><a href="/admin/piechart" className="block py-2 px-4 hover:bg-gray-600 rounded">Pie Chart</a></li>
-                     <li><a href="/admin/datewisereport" className="block py-2 px-4 hover:bg-gray-600 rounded">Date-wise Report</a></li>
-                   </ul>
-                 )}
-               </li>
+          <li>
+            <a href="/admin/propertytypebarchart" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+              <FaChartPie /> Chart
+            </a>
+          </li>
+
+          <li>
+            <a href="/admin/datewisereport" className="flex items-center gap-3 py-2 px-4 hover:bg-gray-700 rounded">
+              <FaChartPie />Date-wise Report
+            </a>
+          </li>
      
                
              </ul>

@@ -1,119 +1,111 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import OwnerFooter from "../../components/OwnerFooter";
+import { useQuery } from "@tanstack/react-query";
+import { viewPropertyAPI } from "../../services/propertyService";
+import { getPropertyLimitAPI } from "../../services/paymentService";
+import { useSelector } from "react-redux";
 
 const ViewProperty = () => {
-  const [properties] = useState([
-    { id: 1, propertyType: "Home", price: "$250,000", bedrooms: 3, bathrooms: 2, propertyFor: "Sale", image: "property1.jpg" },
-    { id: 2, propertyType: "Commercial Property", price: "$1,000,000", bedrooms: 0, bathrooms: 2, propertyFor: "Rent", image: "property2.jpg" },
-    { id: 3, propertyType: "Apartment", price: "$500,000", bedrooms: 2, bathrooms: 1, propertyFor: "Sale", image: "property3.jpg" },
-    { id: 4, propertyType: "Land", price: "$200,000", bedrooms: 0, bathrooms: 0, propertyFor: "Rent", image: "property4.jpg" },
-    { id: 5, propertyType: "Villa", price: "$800,000", bedrooms: 4, bathrooms: 3, propertyFor: "Sale", image: "property5.jpg" },
-  ]);
-
-  const [selectedType, setSelectedType] = useState("All");
-  const [selectedFor, setSelectedFor] = useState("All");
-
-  // Filtered properties
-  const filteredProperties = properties.filter((property) => {
-    return (
-      (selectedType === "All" || property.propertyType === selectedType) &&
-      (selectedFor === "All" || property.propertyFor === selectedFor)
-    );
+  const { data: properties } = useQuery({
+    queryKey: ["view-property"],
+    queryFn: viewPropertyAPI,
   });
 
+  const { data: propertyLimit, isLoading, error } = useQuery({
+    queryKey: ["owner-payment-details"],
+    queryFn: getPropertyLimitAPI,
+  });
+
+  console.log("Property Limit:", propertyLimit);
+  console.log("Properties:", properties);
+
+  const handleAddPropertyClick = () => {
+    if (Array.isArray(properties) && properties.length >= propertyLimit) {
+      window.location.href = "/owner/payment";
+    } else {
+      window.location.href = "/owner/addproperty";
+    }
+  };
+
+  const renderPropertyType = (type) => {
+    if (type === "both") return "Land and Building";
+    if (!type) return "N/A";
+    return type.charAt(0).toUpperCase() + type.slice(1);
+  };
   return (
-    <>
-      <div className="container mx-auto p-6">
-        <h2 className="text-3xl font-bold mb-4">Property Listings</h2>
+    <div className="min-h-screen flex flex-col bg-gray-100">
+      <div className="container mx-auto p-6 flex-grow">
+        <h2 className="text-3xl font-bold mb-6 text-center">Property Listings</h2>
 
-        {/* Filter Section */}
-        <div className="flex flex-wrap gap-4 mb-6">
-          <select
-            className="border px-4 py-2 rounded-md"
-            value={selectedType}
-            onChange={(e) => setSelectedType(e.target.value)}
-          >
-            <option value="All">All Types</option>
-            <option value="Home">Home</option>
-            <option value="Commercial Property">Commercial Property</option>
-            <option value="Apartment">Apartment</option>
-            <option value="Land">Land</option>
-          </select>
-
-          <select
-            className="border px-4 py-2 rounded-md"
-            value={selectedFor}
-            onChange={(e) => setSelectedFor(e.target.value)}
-          >
-            <option value="All">All Listings</option>
-            <option value="Sale">For Sale</option>
-            <option value="Rent">For Rent</option>
-          </select>
-        </div>
-
-        {/* Property Table */}
-        <table className="min-w-full table-auto bg-white border-collapse shadow-lg">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 text-left border-b">Property Type</th>
-              <th className="px-4 py-2 text-left border-b">Price</th>
-              <th className="px-4 py-2 text-left border-b">Bedrooms</th>
-              <th className="px-4 py-2 text-left border-b">Bathrooms</th>
-              <th className="px-4 py-2 text-left border-b">For</th>
-              <th className="px-4 py-2 text-left border-b">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProperties.length > 0 ? (
-              filteredProperties.map((property) => (
-                <tr key={property.id} className="border-b">
-                  <td className="px-4 py-2">{property.propertyType}</td>
-                  <td className="px-4 py-2">{property.price}</td>
-                  <td className="px-4 py-2">{property.bedrooms}</td>
-                  <td className="px-4 py-2">{property.bathrooms}</td>
-                  <td className="px-4 py-2">{property.propertyFor}</td>
-                  <td className="px-4 py-2 flex gap-4">
-                    <Link to={`/owner/viewmoreproperty`}>
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
-                        View More
-                      </button>
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center py-4">
-                  No properties found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-
-        {/* Add Property Button */}
-        <div className="mt-8 text-center">
-          <Link to="/owner/addproperty">
-            <button className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">
-              Add Property
-            </button>
-          </Link>
-        </div>
-
-        {/* Pay Now Button (Visible only if 5+ listings exist) */}
-        {filteredProperties.length >= 5 && (
-          <div className="mt-6 text-center">
-            <Link to="/owner/payment">
-              <button className="bg-red-600 text-white px-6 py-3 rounded-lg hover:bg-red-700">
-                Pay Now
-              </button>
-            </Link>
+        {isLoading && (
+          <div className="text-center text-gray-600">Loading property limit...</div>
+        )}
+        {error && (
+          <div className="text-center text-red-600">
+            Error loading property limit: {error.message}
           </div>
         )}
+        {!isLoading && !error && (
+          <div className="text-center text-gray-700 mb-4">
+            Property Limit: {propertyLimit}
+          </div>
+        )}
+
+        {Array.isArray(properties) && properties.length > 0 ? (
+          <div className="overflow-auto bg-white shadow-md rounded-lg">
+            <table className="w-full table-auto border-collapse">
+              <thead>
+                <tr className="bg-gray-200 text-gray-700">
+                  <th className="px-6 py-3 text-left border-b">Property Type</th>
+                  <th className="px-6 py-3 text-left border-b">Price</th>
+                  <th className="px-6 py-3 text-left border-b">Area (Sq Ft)</th>
+                  <th className="px-6 py-3 text-left border-b">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {properties.map((property) => (
+                  <tr key={property._id} className="border-b hover:bg-gray-100">
+                    <td className="px-6 py-3">{renderPropertyType(property.propertyType)}</td>
+                    <td className="px-6 py-3">{property.price}</td>
+                    <td className="px-6 py-3">{property.area}</td>
+                    <td className="px-6 py-3">
+                      <Link to={`/owner/viewmoreproperty/${property._id}`}>
+                        <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                          View More
+                        </button>
+                      </Link>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="text-center mt-6 text-gray-600 text-lg font-medium">
+            No properties added.
+          </div>
+        )}
+
+        <div className="mt-8 text-center">
+          <button
+            onClick={handleAddPropertyClick}
+            className={`${
+              Array.isArray(properties) && properties.length >= propertyLimit
+                ? "bg-yellow-600 hover:bg-yellow-700"
+                : "bg-green-600 hover:bg-green-700"
+            } text-white px-6 py-3 rounded-lg`}
+            disabled={isLoading}
+          >
+            {Array.isArray(properties) && properties.length >= propertyLimit
+              ? "Make Payment"
+              : "Add Property"}
+          </button>
+        </div>
       </div>
+
       <OwnerFooter />
-    </>
+    </div>
   );
 };
 

@@ -2,11 +2,11 @@ import { jwtDecode } from "jwt-decode";
 
 
 export const getUserData = () => {
-    return localStorage.getItem("userData") ? localStorage.getItem("userData") : null
+    return sessionStorage.getItem("userData") ? sessionStorage.getItem("userData") : null
 
 }
 
 export const getDecodedData = () => {
-    return localStorage.getItem("userData") ? jwtDecode(localStorage.getItem("userData")) : null
+    return sessionStorage.getItem("userData") ? jwtDecode(sessionStorage.getItem("userData")) : null
 }
 

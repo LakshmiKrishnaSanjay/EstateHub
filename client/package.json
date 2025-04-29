@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --open",
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -15,15 +15,20 @@
     "@reduxjs/toolkit": "^2.6.1",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-query": "^5.67.1",
+    "@tanstack/react-query-devtools": "^5.69.0",
     "axios": "^1.8.2",
     "formik": "^2.4.6",
     "jwt-decode": "^4.0.0",
+    "lucide-react": "^0.488.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.4.0",
+    "react-modal": "^3.16.3",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.5",
-    "recharts": "^2.15.1",
+    "react-toastify": "^11.0.5",
+    "recharts": "^2.15.2",
+    "socket.io-client": "^4.8.1",
     "yup": "^1.6.1"
   },
   "devDependencies": {
